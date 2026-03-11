@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LV Studio — Web Design & Development</title>
+  <meta name="description" content="LV Studio — Premium web design and development. Built to convert, designed to last."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f2ee;
+      --cream: #ede9e3;
+      --accent: #c8b89a;
+      --muted: #6b6560;
+      --border: #2a2825;
+      --fs-display: clamp(5rem, 13vw, 14rem);
+      --fs-h1: clamp(2.5rem, 5vw, 5rem);
+      --fs-h2: clamp(1.6rem, 3vw, 2.8rem);
+      --fs-body: clamp(0.95rem, 1.2vw, 1.1rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* CUSTOM CURSOR */
+    .cursor {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease;
+      mix-blend-mode: difference;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem 4vw;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.1em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    /* SECTIONS BASE */
+    section { padding: 8vw 4vw; }
+
+    /* ─── HERO ─── */
+    #home {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding-top: 8rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-noise {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: 0.6;
+    }
+
+    .hero-line {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: var(--fs-display);
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      display: block;
+    }
+
+    .hero-line.outlined {
+      -webkit-text-stroke: 1px var(--white);
+      color: transparent;
+    }
+
+    .hero-sub {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 5vw;
+      padding-bottom: 4vw;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-desc {
+      max-width: 380px;
+      color: var(--muted);
+      font-size: var(--fs-body);
+      line-height: 1.75;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      border: 1px solid var(--white);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: background 0.25s, color 0.25s;
+      font-family: 'DM Mono', monospace;
+      white-space: nowrap;
+    }
+    .hero-cta:hover { background: var(--white); color: var(--black); }
+
+    .hero-counter {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      position: absolute;
+      top: 8rem; right: 4vw;
+      writing-mode: vertical-rl;
+    }
+
+    /* ─── MARQUEE ─── */
+    .marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 0;
+      background: var(--black);
+    }
+
+    .marquee-track {
+      display: flex; gap: 4rem;
+      animation: marquee 22s linear infinite;
+      width: max-content;
+    }
+
+    .marquee-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      white-space: nowrap;
+      display: flex; align-items: center; gap: 4rem;
+    }
+
+    .marquee-item span { color: var(--accent); font-size: 0.6rem; }
+
+    @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+
+    /* ─── SERVICES ─── */
+    #services {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .section-label::after {
+      content: '';
+      height: 1px;
+      width: 60px;
+      background: var(--border);
+      display: inline-block;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--border);
+    }
+
+    .service-item {
+      padding: 3.5rem 3rem;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .service-item:nth-child(even) { border-right: none; }
+    .service-item:hover { background: #111; }
+
+    .service-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+    }
+
+    .service-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      letter-spacing: 0.04em;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .service-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.8;
+      max-width: 340px;
+    }
+
+    .service-tags {
+      margin-top: 2rem;
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+    }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── PROCESS ─── */
+    #process { border-bottom: 1px solid var(--border); }
+
+    .process-list { margin-top: 2rem; }
+
+    .process-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 2rem;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+      transition: padding-left 0.3s;
+    }
+
+    .process-item:hover { padding-left: 1rem; }
+    .process-item:last-child { border-bottom: none; }
+
+    .process-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: var(--border);
+    }
+
+    .process-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+    }
+
+    .process-text { color: var(--muted); font-size: 0.9rem; line-height: 1.8; max-width: 560px; }
+
+    /* ─── CTA BAND ─── */
+    #contact {
+      text-align: center;
+      padding: 10vw 4vw;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-bg-text {
+      position: absolute;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22vw;
+      color: #111;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+
+    .cta-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: var(--fs-h1);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-sub {
+      color: var(--muted);
+      font-size: var(--fs-body);
+      max-width: 440px;
+      margin: 0 auto 3rem;
+    }
+
+    .cta-email {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(1rem, 1.5vw, 1.3rem);
+      color: var(--white);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 0.2rem;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .cta-email:hover { color: var(--accent); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 2rem 4vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── LEGAL PAGES ─── */
+    .legal-page {
+      display: none;
+      min-height: 100vh;
+      padding: 10rem 4vw 6vw;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .legal-page.active { display: block; }
+    #home-content { display: block; }
+    #home-content.hidden { display: none; }
+
+    .legal-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      letter-spacing: 0.02em;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .legal-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 4rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .legal-page h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.06em;
+      margin: 3rem 0 1rem;
+      color: var(--accent);
+    }
+
+    .legal-page p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.9;
+      margin-bottom: 1rem;
+    }
+
+    .legal-page ul {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.9;
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 3rem;
+      transition: color 0.2s;
+      cursor: pointer;
+      background: none; border: none;
+    }
+    .back-btn:hover { color: var(--white); }
+
+    /* ─── ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 700px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .service-item { border-right: none !important; }
+      nav { padding: 1.2rem 5vw; }
+      .process-item { grid-template-columns: 50px 1fr; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#" onclick="showHome()">LV Studio</a>
+  <ul class="nav-links">
+    <li><a href="#services" onclick="showHome()">Services</a></li>
+    <li><a href="#process" onclick="showHome()">Process</a></li>
+    <li><a href="#contact" onclick="showHome()">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+<div id="home-content">
+
+  <!-- HERO -->
+  <section id="home">
+    <div class="hero-noise"></div>
+    <div class="hero-counter">LV Studio — Est. 2024</div>
+
+    <div>
+      <span class="hero-line reveal">WEB</span>
+      <span class="hero-line outlined reveal">DESIGN</span>
+      <span class="hero-line reveal">& DEV</span>
+    </div>
+
+    <div class="hero-sub reveal">
+      <p class="hero-desc">
+        Premium web design and development for brands that refuse to look ordinary. Built to convert. Designed to last.
+      </p>
+      <a class="hero-cta" href="#contact">Start a project</a>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <div class="marquee-item">Web Design <span>✦</span> Web Development <span>✦</span> UI / UX <span>✦</span> Landing Pages <span>✦</span> Custom Builds <span>✦</span> Performance <span>✦</span></div>
+      <div class="marquee-item">Web Design <span>✦</span> Web Development <span>✦</span> UI / UX <span>✦</span> Landing Pages <span>✦</span> Custom Builds <span>✦</span> Performance <span>✦</span></div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="section-label">Services</div>
+    <div class="services-grid">
+
+      <div class="service-item reveal">
+        <div class="service-num">01</div>
+        <div class="service-title">Web Design</div>
+        <p class="service-desc">Interfaces that look expensive and convert. Every pixel has a reason. No templates, no filler — custom layouts built around your brand and your goals.</p>
+        <div class="service-tags">
+          <span class="tag">Figma</span>
+          <span class="tag">UI/UX</span>
+          <span class="tag">Prototyping</span>
+          <span class="tag">Responsive</span>
+        </div>
+      </div>
+
+      <div class="service-item reveal">
+        <div class="service-num">02</div>
+        <div class="service-title">Web Development</div>
+        <p class="service-desc">Clean, fast, and bulletproof code. From static sites to complex builds — shipped with performance-first principles and zero bloat.</p>
+        <div class="service-tags">
+          <span class="tag">HTML / CSS / JS</span>
+          <span class="tag">React</span>
+          <span class="tag">Next.js</span>
+          <span class="tag">CMS</span>
+        </div>
+      </div>
+
+      <div class="service-item reveal">
+        <div class="service-num">03</div>
+        <div class="service-title">Landing Pages</div>
+        <p class="service-desc">High-converting single pages for product launches, campaigns, and lead gen. Fast turnaround, built to perform.</p>
+        <div class="service-tags">
+          <span class="tag">Conversion</span>
+          <span class="tag">Speed</span>
+          <span class="tag">A/B Ready</span>
+        </div>
+      </div>
+
+      <div class="service-item reveal">
+        <div class="service-num">04</div>
+        <div class="service-title">Maintenance & Support</div>
+        <p class="service-desc">Ongoing care so your site stays fast, secure, and up to date. Updates, fixes, and improvements — handled.</p>
+        <div class="service-tags">
+          <span class="tag">Updates</span>
+          <span class="tag">Security</span>
+          <span class="tag">Retainer</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="section-label">Process</div>
+    <div class="process-list">
+
+      <div class="process-item reveal">
+        <div class="process-num">01</div>
+        <div>
+          <div class="process-title">Discovery</div>
+          <p class="process-text">We get into your brand, your goals, and your audience. No assumptions — just the right questions to build something that actually works.</p>
+        </div>
+      </div>
+
+      <div class="process-item reveal">
+        <div class="process-num">02</div>
+        <div>
+          <div class="process-title">Design</div>
+          <p class="process-text">Custom mockups built in Figma. You see exactly what you're getting before a single line of code is written. Revisions until it's right.</p>
+        </div>
+      </div>
+
+      <div class="process-item reveal">
+        <div class="process-num">03</div>
+        <div>
+          <div class="process-title">Build</div>
+          <p class="process-text">Clean, performant code. Responsive across every device. Built to load fast, rank well, and scale with your business.</p>
+        </div>
+      </div>
+
+      <div class="process-item reveal">
+        <div class="process-num">04</div>
+        <div>
+          <div class="process-title">Launch</div>
+          <p class="process-text">Full deployment, domain setup, and handoff. You walk away with a site that's live, tested, and ready to work for you.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="contact">
+    <div class="cta-bg-text">LV</div>
+    <div class="cta-label">Let's build</div>
+    <div class="cta-heading reveal">Got a project?<br/>Let's talk.</div>
+    <p class="cta-sub reveal">Reach out with your idea, budget, and timeline. Response within 24 hours.</p>
+    <a class="cta-email reveal" href="mailto:liamswebstudio@gmail.com">liamswebstudio@gmail.com</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">LV Studio</div>
+    <div class="footer-links">
+      <a href="#" onclick="showPage('privacy'); return false;">Privacy Policy</a>
+      <a href="#" onclick="showPage('terms'); return false;">Terms & Conditions</a>
+    </div>
+    <div class="footer-copy">© 2024 LV Studio. All rights reserved.</div>
+  </footer>
+
+</div><!-- end home-content -->
+
+
+<!-- ═══════════════════ PRIVACY POLICY ═══════════════════ -->
+<div id="privacy-page" class="legal-page">
+  <button class="back-btn" onclick="showHome()">← Back to site</button>
+  <div class="legal-title">Privacy Policy</div>
+  <div class="legal-date">Last updated: January 1, 2025 &nbsp;|&nbsp; liamvogel.com</div>
+
+  <h2>Overview</h2>
+  <p>LV Studio ("we", "us", or "our") operates liamvogel.com. This Privacy Policy explains how we collect, use, and safeguard information when you visit our website or contact us about our services.</p>
+
+  <h2>Information We Collect</h2>
+  <p>We may collect the following information:</p>
+  <ul>
+    <li>Name and contact details (email address) when you reach out to us</li>
+    <li>Project details and requirements shared in correspondence</li>
+    <li>Basic usage data collected automatically (browser type, pages visited, time on site) via analytics tools</li>
+  </ul>
+  <p>We do not collect sensitive personal data, financial information, or any data beyond what is necessary to communicate and deliver our services.</p>
+
+  <h2>How We Use Your Information</h2>
+  <p>Information collected is used solely to:</p>
+  <ul>
+    <li>Respond to inquiries and project requests</li>
+    <li>Deliver and improve our web design and development services</li>
+    <li>Communicate updates relevant to your project</li>
+    <li>Understand how visitors use our website</li>
+  </ul>
+  <p>We do not sell, trade, or rent your personal information to third parties.</p>
+
+  <h2>Cookies</h2>
+  <p>Our website may use cookies to improve the user experience. These are small data files stored on your device. You may disable cookies through your browser settings; however, some functionality may be affected.</p>
+
+  <h2>Third-Party Links</h2>
+  <p>Our site may contain links to external websites. We are not responsible for the privacy practices or content of those sites and encourage you to review their policies independently.</p>
+
+  <h2>Data Retention</h2>
+  <p>We retain personal information only as long as necessary to fulfil the purposes for which it was collected, or as required by law. Correspondence and project data are deleted once no longer needed.</p>
+
+  <h2>Your Rights</h2>
+  <p>You have the right to request access to, correction of, or deletion of any personal data we hold about you. To make such a request, contact us at <a href="mailto:liamswebstudio@gmail.com" style="color:var(--accent)">liamswebstudio@gmail.com</a>.</p>
+
+  <h2>Changes to This Policy</h2>
+  <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with a revised date. Continued use of our website constitutes acceptance of any updates.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy? Reach us at <a href="mailto:liamswebstudio@gmail.com" style="color:var(--accent)">liamswebstudio@gmail.com</a>.</p>
+</div>
+
+
+<!-- ═══════════════════ TERMS & CONDITIONS ═══════════════════ -->
+<div id="terms-page" class="legal-page">
+  <button class="back-btn" onclick="showHome()">← Back to site</button>
+  <div class="legal-title">Terms & Conditions</div>
+  <div class="legal-date">Last updated: January 1, 2025 &nbsp;|&nbsp; liamvogel.com</div>
+
+  <h2>Agreement</h2>
+  <p>By accessing liamvogel.com or engaging LV Studio for services, you agree to the following terms. If you do not agree, please discontinue use of our site and services.</p>
+
+  <h2>Services</h2>
+  <p>LV Studio provides web design and development services. The scope, timeline, and deliverables for any project are defined in a separate agreement or proposal provided prior to commencement of work.</p>
+
+  <h2>Payment</h2>
+  <p>Payment terms are outlined in your project proposal. A deposit is required before work begins. Final delivery is contingent on receipt of full payment. All fees are non-refundable once work has commenced unless otherwise agreed in writing.</p>
+
+  <h2>Intellectual Property</h2>
+  <p>Upon receipt of full payment, the client receives full ownership of the final deliverables. LV Studio retains the right to display the work in our portfolio unless the client explicitly requests otherwise in writing.</p>
+  <p>Any third-party assets (fonts, stock images, libraries) used in a project are subject to their respective licenses. The client is responsible for ensuring appropriate licensing for any assets they supply.</p>
+
+  <h2>Client Responsibilities</h2>
+  <p>The client agrees to:</p>
+  <ul>
+    <li>Provide accurate and timely feedback during the project</li>
+    <li>Supply necessary content, assets, and credentials as needed</li>
+    <li>Review and approve deliverables within agreed timeframes</li>
+  </ul>
+  <p>Delays caused by the client may affect the project timeline and may incur additional costs.</p>
+
+  <h2>Revisions</h2>
+  <p>The number of revisions included is specified in the project agreement. Revisions beyond the agreed scope will be billed at our standard hourly rate.</p>
+
+  <h2>Limitation of Liability</h2>
+  <p>LV Studio is not liable for any indirect, incidental, or consequential damages arising from the use or inability to use our website or services. Our total liability shall not exceed the amount paid by the client for the services in question.</p>
+
+  <h2>Termination</h2>
+  <p>Either party may terminate a project agreement with written notice. In the event of termination, the client is responsible for payment for all work completed to the date of termination. Deposits are non-refundable.</p>
+
+  <h2>Governing Law</h2>
+  <p>These terms are governed by the laws of the State of Utah, United States. Any disputes shall be resolved in the courts of Utah.</p>
+
+  <h2>Changes to Terms</h2>
+  <p>We reserve the right to update these terms at any time. Continued use of our website following updates constitutes acceptance of the revised terms.</p>
+
+  <h2>Contact</h2>
+  <p>For questions regarding these terms, contact <a href="mailto:liamswebstudio@gmail.com" style="color:var(--accent)">liamswebstudio@gmail.com</a>.</p>
+</div>
+
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX - 4 + 'px';
+    cursor.style.top = e.clientY - 4 + 'px';
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Page routing
+  function showPage(page) {
+    document.getElementById('home-content').classList.add('hidden');
+    document.querySelectorAll('.legal-page').forEach(p => p.classList.remove('active'));
+    document.getElementById(page + '-page').classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  function showHome() {
+    document.getElementById('home-content').classList.remove('hidden');
+    document.querySelectorAll('.legal-page').forEach(p => p.classList.remove('active'));
+    window.scrollTo(0,0);
+  }
+</script>
+</body>
+</html>
