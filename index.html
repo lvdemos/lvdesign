@@ -202,19 +202,6 @@
       pointer-events: none;
     }
 
-    .hero-cursor-orb {
-      position: absolute;
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(200,184,154,0.06) 0%, transparent 70%);
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: opacity 0.4s ease;
-      opacity: 0;
-      will-change: transform;
-    }
-
     .hero-eyebrow {
       font-size: 0.72rem;
       font-weight: 500;
@@ -296,7 +283,7 @@
       font-size: 0.72rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--border);
+      color: var(--gray);
       white-space: nowrap;
       display: flex; align-items: center; gap: 3rem;
       padding-right: 3rem;
@@ -616,7 +603,6 @@
 
   <!-- HERO -->
   <section id="home">
-    <div class="hero-cursor-orb" id="heroOrb"></div>
     <div class="hero-eyebrow reveal">Web Design & AI Solutions</div>
     <h1 class="hero-title reveal">
       Sites that work<br/>as good as they <em>look.</em>
@@ -818,17 +804,6 @@
 
 
 <script>
-  // cursor orb
-  const hero = document.getElementById('home');
-  const orb = document.getElementById('heroOrb');
-  hero.addEventListener('mousemove', (e) => {
-    const rect = hero.getBoundingClientRect();
-    orb.style.opacity = '1';
-    orb.style.left = (e.clientX - rect.left) + 'px';
-    orb.style.top = (e.clientY - rect.top) + 'px';
-  });
-  hero.addEventListener('mouseleave', () => { orb.style.opacity = '0'; });
-
   // parallax background
   const parallaxBg = document.getElementById('parallax-bg');
   let ticking = false;
